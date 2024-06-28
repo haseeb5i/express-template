@@ -16,7 +16,7 @@ describe("User API Endpoints", () => {
 
       // Assert
       expect(response.statusCode).toEqual(StatusCodes.OK);
-      expect(responseBody.message).toContain("Users found");
+      expect(responseBody.message).toContain("Users Found");
       expect(responseBody.data.length).toEqual(users.length);
       responseBody.data.forEach((user, index) => compareUsers(users[index] as User, user));
     });
@@ -34,7 +34,7 @@ describe("User API Endpoints", () => {
 
       // Assert
       expect(response.statusCode).toEqual(StatusCodes.OK);
-      expect(responseBody.message).toContain("User found");
+      expect(responseBody.message).toContain("User Found");
       if (!expectedUser) throw new Error("Invalid test data: expectedUser is undefined");
       compareUsers(expectedUser, responseBody.data);
     });
@@ -49,7 +49,7 @@ describe("User API Endpoints", () => {
 
       // Assert
       expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND);
-      expect(responseBody.message).toContain("User not found");
+      expect(responseBody.message).toContain(`No User found with id ${testId}`);
       expect(responseBody.data).toBeNull();
     });
 
@@ -60,7 +60,7 @@ describe("User API Endpoints", () => {
       const responseBody: ServiceResponse = response.body;
 
       // Assert
-      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
+      expect(response.statusCode).toEqual(StatusCodes.UNPROCESSABLE_ENTITY);
       expect(responseBody.message).toContain("Invalid input");
       expect(responseBody.data).toBeNull();
     });
