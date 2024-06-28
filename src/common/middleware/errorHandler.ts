@@ -16,9 +16,9 @@ const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
     isTrusted = error.isOperational;
   }
 
-  const httpStatusCode = isTrusted ? (error as AppError).httpCode : StatusCodes.INTERNAL_SERVER_ERROR;
+  const statusCode = isTrusted ? (error as AppError).httpCode : StatusCodes.INTERNAL_SERVER_ERROR;
   const responseError = isTrusted ? error.message : ReasonPhrases.INTERNAL_SERVER_ERROR;
-  res.status(httpStatusCode).send({ statusCode: httpStatusCode, message: responseError, data: null });
+  res.status(statusCode).send({ statusCode, message: responseError, data: null });
 };
 
 export default () => [notFoundHandler, errorHandler];

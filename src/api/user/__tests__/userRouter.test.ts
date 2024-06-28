@@ -5,18 +5,18 @@ import { app } from "@/server";
 
 import { User } from "../user.model";
 import { users } from "../user.repo";
-import { ServiceResponse } from "@/common/utils/httpHandlers";
+import { ApiResponse } from "@/common/utils/httpHandlers";
 
 describe("User API Endpoints", () => {
   describe("GET /users", () => {
     it("should return a list of users", async () => {
       // Act
       const response = await request(app).get("/users");
-      const responseBody: ServiceResponse<User[]> = response.body;
+      const responseBody: ApiResponse<User[]> = response.body;
 
       // Assert
       expect(response.statusCode).toEqual(StatusCodes.OK);
-      expect(responseBody.message).toContain("Users Found");
+      expect(responseBody.message).toContain("Users found");
       expect(responseBody.data.length).toEqual(users.length);
       responseBody.data.forEach((user, index) => compareUsers(users[index] as User, user));
     });
@@ -30,11 +30,11 @@ describe("User API Endpoints", () => {
 
       // Act
       const response = await request(app).get(`/users/${testId}`);
-      const responseBody: ServiceResponse<User> = response.body;
+      const responseBody: ApiResponse<User> = response.body;
 
       // Assert
       expect(response.statusCode).toEqual(StatusCodes.OK);
-      expect(responseBody.message).toContain("User Found");
+      expect(responseBody.message).toContain("User found");
       if (!expectedUser) throw new Error("Invalid test data: expectedUser is undefined");
       compareUsers(expectedUser, responseBody.data);
     });
@@ -45,7 +45,7 @@ describe("User API Endpoints", () => {
 
       // Act
       const response = await request(app).get(`/users/${testId}`);
-      const responseBody: ServiceResponse = response.body;
+      const responseBody: ApiResponse = response.body;
 
       // Assert
       expect(response.statusCode).toEqual(StatusCodes.NOT_FOUND);
@@ -57,7 +57,7 @@ describe("User API Endpoints", () => {
       // Act
       const invalidInput = "abc";
       const response = await request(app).get(`/users/${invalidInput}`);
-      const responseBody: ServiceResponse = response.body;
+      const responseBody: ApiResponse = response.body;
 
       // Assert
       expect(response.statusCode).toEqual(StatusCodes.UNPROCESSABLE_ENTITY);

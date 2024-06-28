@@ -1,15 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { ZodError, ZodSchema } from "zod";
+import { z, ZodError, ZodSchema } from "zod";
 import { AppError } from "../utils/appError";
 
-export type ServiceResponse<T = null> = {
-  message: string;
-  statusCode: number;
-  data: T;
-};
-
-export const formatResponse = <T = null>(httpCode: number, message: string, respObject: T): ServiceResponse<T> => {
+export const formatResponse = <T = null>(httpCode: number, message: string, respObject: T): ApiResponse<T> => {
   return {
     message,
     statusCode: httpCode,
@@ -17,7 +11,7 @@ export const formatResponse = <T = null>(httpCode: number, message: string, resp
   };
 };
 
-export const handleResponse = (response: Response, serviceResponse: ServiceResponse<any>) => {
+export const handleResponse = (response: Response, serviceResponse: ApiResponse<any>) => {
   return response.status(serviceResponse.statusCode).send(serviceResponse);
 };
 
@@ -30,3 +24,15 @@ export const validateRequest = (schema: ZodSchema) => (req: Request, _res: Respo
     next(new AppError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage));
   }
 };
+
+export type ApiResponse<T = null> = {
+  message: string;
+  statusCode: number;
+  data: T;
+};
+
+export const ApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
+  z.object({
+    message: z.string(),
+    data: dataSchema.optional(),
+  });
