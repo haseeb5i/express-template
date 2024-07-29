@@ -1,9 +1,21 @@
 import { NextFunction, Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 import { z, ZodError, ZodSchema } from "zod";
-import { AppError } from "../utils/appError";
+import { UnprocessableEntityException } from "../utils/appError";
 
-export const formatResponse = <T = null>(httpCode: number, message: string, respObject: T): ApiResponse<T> => {
+export type ApiResponse<T = null> = {
+  message: string;
+  statusCode: number;
+  data: T;
+};
+
+export const ApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
+  z.object({
+    statusCode: z.number().gte(200),
+    message: z.string(),
+    data: dataSchema.optional(),
+  });
+
+export const formatResponse = <T = null>(message: string, respObject: T, httpCode = 200): ApiResponse<T> => {
   return {
     message,
     statusCode: httpCode,
@@ -21,18 +33,6 @@ export const validateRequest = (schema: ZodSchema) => (req: Request, _res: Respo
     next();
   } catch (err) {
     const errorMessage = `Invalid input: ${(err as ZodError).errors.map((e) => e.message).join(", ")}`;
-    next(new AppError(StatusCodes.UNPROCESSABLE_ENTITY, errorMessage));
+    next(new UnprocessableEntityException(errorMessage));
   }
 };
-
-export type ApiResponse<T = null> = {
-  message: string;
-  statusCode: number;
-  data: T;
-};
-
-export const ApiResponseSchema = <T extends z.ZodTypeAny>(dataSchema: T) =>
-  z.object({
-    message: z.string(),
-    data: dataSchema.optional(),
-  });

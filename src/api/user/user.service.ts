@@ -1,6 +1,4 @@
-import { StatusCodes } from "http-status-codes";
-
-import { AppError } from "@/common/utils/appError";
+import { NotFoundException } from "@/common/utils/appError";
 
 import { userRepository } from "./user.repo";
 import { formatResponse } from "@/common/utils/httpHandlers";
@@ -10,17 +8,17 @@ export const userService = {
   findAll: async () => {
     const users = await userRepository.findAllAsync();
     if (!users) {
-      throw new AppError(StatusCodes.NOT_FOUND, "No Users found");
+      throw new NotFoundException("No Users found");
     }
-    return formatResponse(StatusCodes.OK, "Users found", users);
+    return formatResponse("Users found", users);
   },
 
   // Retrieves a single user by their ID
   findById: async (id: number) => {
     const user = await userRepository.findByIdAsync(id);
     if (!user) {
-      return formatResponse(StatusCodes.NOT_FOUND, `No User found with id ${id}`, null);
+      throw new NotFoundException(`No User found with id ${id}`);
     }
-    return formatResponse(StatusCodes.OK, "User found", user);
+    return formatResponse("User found", user);
   },
 };

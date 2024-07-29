@@ -9,7 +9,6 @@ import { userService } from "./user.service";
 import { handleResponse, validateRequest } from "@/common/utils/httpHandlers";
 
 export const userRegistry = new OpenAPIRegistry();
-
 userRegistry.register("User", UserSchema);
 
 const router = express.Router();
@@ -30,7 +29,7 @@ userRegistry.registerPath({
   method: "get",
   path: "/users/{id}",
   tags: ["User"],
-  request: { params: GetUserSchema.shape.params },
+  request: GetUserSchema.shape,
   responses: createApiResponse(UserSchema, "Success"),
 });
 
