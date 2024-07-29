@@ -1,6 +1,5 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import express from "express";
-import { StatusCodes } from "http-status-codes";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
@@ -18,7 +17,7 @@ healthCheckRegistry.registerPath({
 });
 
 router.get("/", (_req, res) => {
-  const payload = formatResponse(StatusCodes.OK, "Service is healthy", null);
+  const payload = formatResponse("Service is healthy", null);
   handleResponse(res, payload);
 });
 
