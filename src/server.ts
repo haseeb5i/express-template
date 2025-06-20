@@ -2,13 +2,12 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 
-import { healthCheckRouter } from "@/api/healthCheck/health.router";
+import errorHandler from "@/middlewares/errorHandler";
+import rateLimiter from "@/middlewares/rateLimiter";
+import requestLogger from "@/middlewares/requestLogger";
+import { env } from "@/utils/envConfig";
+import { docsRouter } from "@/api-docs/docs-router";
 import { userRouter } from "@/api/user/user.router";
-import { openAPIRouter } from "@/api-docs/openAPIRouter";
-import { env } from "@/common/utils/envConfig";
-import errorHandler from "@/common/middleware/errorHandler";
-import rateLimiter from "@/common/middleware/rateLimiter";
-import requestLogger from "@/common/middleware/requestLogger";
 
 const app = express();
 
@@ -24,11 +23,10 @@ app.use(rateLimiter);
 app.use(requestLogger);
 
 // Routes
-app.use("/health-check", healthCheckRouter);
 app.use("/users", userRouter);
 
 // Swagger UI
-app.use(openAPIRouter);
+app.use(docsRouter);
 
 // Error Handling
 app.use(errorHandler());

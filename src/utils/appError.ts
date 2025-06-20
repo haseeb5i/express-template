@@ -1,7 +1,6 @@
 import { ReasonPhrases } from "http-status-codes";
 
 export class AppError extends Error {
-  // public readonly name: string;
   public readonly httpCode: number;
   public readonly isOperational: boolean;
 
@@ -13,7 +12,7 @@ export class AppError extends Error {
     this.httpCode = httpCode;
     this.isOperational = isOperational;
 
-    // Error.captureStackTrace(this);
+    Error.captureStackTrace(this);
   }
 }
 

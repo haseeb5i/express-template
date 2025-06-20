@@ -1,6 +1,5 @@
-import { env } from "@/common/utils/envConfig";
-import { logger } from "@/common/utils/logger";
-
+import { env } from "@/utils/envConfig";
+import { logger } from "@/utils/logger";
 import { app } from "./server";
 
 const server = app.listen(env.PORT, () => {
